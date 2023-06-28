@@ -1,0 +1,26 @@
+{
+  "name": "express-mesto-auth",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "lint": "npx eslint ."
+  },
+  "author": "Rosie B",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "editorconfig": "^1.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "nodemon": "^2.0.22"
+  },
+  "keywords": [],
+  "description": ""
+}
