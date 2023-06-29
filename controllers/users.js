@@ -21,6 +21,7 @@ const createUser = (req, res) => {
 
 const getUsers = (req, res) => {
   User.find({})
+    .orFail(() => new Error('Not Found'))
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -79,7 +80,7 @@ const updateUserAvatar = (req, res) => {
   User.findByIdAndUpdate(
     req.user._id,
     { avatar },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((user) => {
       res.status(200).send(user);

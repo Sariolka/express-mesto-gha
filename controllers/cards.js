@@ -35,8 +35,8 @@ const deleteCard = (req, res) => {
     .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
-      if (err.name === 'CastError' || err.message === 'Not Found') {
-        res.status(ERROR_VALIDATION || ERROR_NOT_FOUND).send({ message: 'Карточка не найдена!' });
+      if (err.message === 'Not Found') {
+        res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена!' });
       } else {
         res
           .status(ERROR_DEFAULT)
