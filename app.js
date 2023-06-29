@@ -21,6 +21,7 @@ app.use(router);
 app.use('/', (reg, res) => {
   res.status(ERROR_NOT_FOUND).send({ message: 'Что-то пошло не так...' });
 });
+
 app.listen(3000, () => {
   console.log('Сервер запущен!');
 });
