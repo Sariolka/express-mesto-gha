@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const { ERROR_NOT_FOUND } = require('./errors/errors');
 
 const app = express();
 
@@ -21,7 +22,9 @@ app.use((req, res, next) => {
 
 app.use(userRouter);
 app.use(cardRouter);
-
+app.use('/', (reg, res) => {
+  res.status(ERROR_NOT_FOUND).send({ message: 'Что-то пошло не так...' });
+});
 app.listen(3000, () => {
   console.log('Сервер запущен!');
 });

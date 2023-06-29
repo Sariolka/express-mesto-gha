@@ -11,7 +11,6 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -26,7 +25,6 @@ const getUsers = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -44,9 +42,7 @@ const getUserById = (req, res) => {
     })
     .catch((err) => {
       if (err.message === 'Not Found' || err.name === 'CastError') {
-        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
-        console.log(err.name);
-        return;
+        res.status(ERROR_NOT_FOUND || ERROR_VALIDATION).send({ message: 'Пользователь не найден!' });
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -68,12 +64,8 @@ const updateUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        console.log(err.name);
-        return;
       } else if (err.message === 'Not Found' || err.name === 'CastError') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
-        console.log(err.name);
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -95,10 +87,8 @@ const updateUserAvatar = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else if (err.message === 'Not Found' || err.name === 'CastError') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)

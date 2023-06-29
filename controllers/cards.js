@@ -9,11 +9,9 @@ const {
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(() =>
-      res.status(ERROR_DEFAULT).send({
-        message: 'На сервере произошла ошибка',
-      })
-    );
+    .catch(() => res.status(ERROR_DEFAULT).send({
+      message: 'На сервере произошла ошибка',
+    }));
 };
 
 const createCard = (req, res) => {
@@ -23,7 +21,6 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -35,12 +32,11 @@ const createCard = (req, res) => {
 const deleteCard = (req, res) => {
   const id = req.params.cardId;
   Card.findByIdAndRemove(id)
+    .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError' || err.message === 'Not Found') {
         res.status(ERROR_VALIDATION || ERROR_NOT_FOUND).send({ message: 'Карточка не найдена!' });
-        console.log(err.name);
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -55,14 +51,13 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
+    .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else if (err.message === 'Not Found') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена!' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
@@ -76,14 +71,13 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
+    .orFail(() => new Error('Not Found'))
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-        return;
       } else if (err.message === 'Not Found') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Карточка не найдена!' });
-        return;
       } else {
         res
           .status(ERROR_DEFAULT)
