@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = require('./routes');
 
-
 const { ERROR_NOT_FOUND } = require('./errors/errors');
 
 const app = express();
@@ -17,6 +16,7 @@ app.use((req, res, next) => {
 
   next();
 });
+
 app.use(router);
 app.use('/', (reg, res) => {
   res.status(ERROR_NOT_FOUND).send({ message: 'Что-то пошло не так...' });
