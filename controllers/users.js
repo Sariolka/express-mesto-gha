@@ -1,12 +1,14 @@
 const User = require('../models/user');
 
-const { ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_DEFAULT } = require('../errors/errors');
+const {
+  ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_DEFAULT, OK,
+} = require('../errors/errors');
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -21,12 +23,9 @@ const createUser = (req, res) => {
 
 const getUsers = (req, res) => {
   User.find({})
-    .orFail(() => new Error('Not Found'))
-    .then((users) => res.status(200).send(users))
+    .then((users) => res.status(OK).send(users))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-      } else {
+      if (err) {
         res
           .status(ERROR_DEFAULT)
           .send({ message: 'На сервере произошла ошибка' });
@@ -39,7 +38,7 @@ const getUserById = (req, res) => {
   User.findById(userId)
     .orFail(() => new Error('Not Found'))
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -62,12 +61,12 @@ const updateUser = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-      } else if (err.message === 'Not Found' || err.name === 'CastError') {
+      } else if (err.message === 'Not Found') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
       } else {
         res
@@ -85,12 +84,12 @@ const updateUserAvatar = (req, res) => {
     { new: true, runValidators: true },
   )
     .then((user) => {
-      res.status(200).send(user);
+      res.status(OK).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
-      } else if (err.message === 'Not Found' || err.name === 'CastError') {
+      } else if (err.message === 'Not Found') {
         res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
       } else {
         res

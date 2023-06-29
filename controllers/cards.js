@@ -4,11 +4,12 @@ const {
   ERROR_VALIDATION,
   ERROR_NOT_FOUND,
   ERROR_DEFAULT,
+  OK,
 } = require('../errors/errors');
 
 const getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(200).send(cards))
+    .then((cards) => res.status(OK).send(cards))
     .catch(() => res.status(ERROR_DEFAULT).send({
       message: 'На сервере произошла ошибка',
     }));
@@ -17,7 +18,7 @@ const getCards = (req, res) => {
 const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
@@ -33,7 +34,7 @@ const deleteCard = (req, res) => {
   const id = req.params.cardId;
   Card.findByIdAndRemove(id)
     .orFail(() => new Error('Not Found'))
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Карточка не найдена!' });
@@ -54,7 +55,7 @@ const likeCard = (req, res) => {
     { new: true },
   )
     .orFail(() => new Error('Not Found'))
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
@@ -74,7 +75,7 @@ const dislikeCard = (req, res) => {
     { new: true },
   )
     .orFail(() => new Error('Not Found'))
-    .then((card) => res.status(200).send(card))
+    .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(ERROR_VALIDATION).send({ message: 'Данные некорректны' });
