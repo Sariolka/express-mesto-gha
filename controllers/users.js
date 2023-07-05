@@ -2,9 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-
 const {
-  ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_DEFAULT, OK,
+  ERROR_VALIDATION, ERROR_NOT_FOUND, ERROR_DEFAULT, OK, UNAUTHORIZED,
 } = require('../errors/errors');
 
 const createUser = (req, res) => {
@@ -36,12 +35,12 @@ const login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, 'super-secret-key', { expiresIn: '7d' });
       res.status(OK).send(token);
     })
-    .catch((err) => {
-      res.status
-    })
-}
-
-
+    .catch(() => {
+      res
+        .status(UNAUTHORIZED)
+        .send({ message: 'Необходима авторизация' });
+    });
+};
 
 const getUsers = (req, res) => {
   User.find({})
@@ -58,6 +57,25 @@ const getUsers = (req, res) => {
 const getUserById = (req, res) => {
   const { userId } = req.params;
   User.findById(userId)
+    .orFail(() => new Error('Not Found'))
+    .then((user) => {
+      res.status(OK).send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(ERROR_VALIDATION).send({ message: 'Пользователь не найден!' });
+      } else if (err.message === 'Not Found') {
+        res.status(ERROR_NOT_FOUND).send({ message: 'Пользователь не найден!' });
+      } else {
+        res
+          .status(ERROR_DEFAULT)
+          .send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
+
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
     .orFail(() => new Error('Not Found'))
     .then((user) => {
       res.status(OK).send(user);
@@ -128,4 +146,5 @@ module.exports = {
   updateUser,
   updateUserAvatar,
   login,
+  getCurrentUser,
 };
