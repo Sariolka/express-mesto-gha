@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
+const { default: isEmail } = require('validator/lib/isEmail');
+const { default: isURL } = require('validator/lib/isURL');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,16 +20,17 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: isURL,
   },
   email: {
     type: String,
     required: true,
     unique: true,
+    validate: isEmail,
   },
   password: {
     type: String,
     required: true,
-    minlength: 6,
     select: false,
   },
 });
