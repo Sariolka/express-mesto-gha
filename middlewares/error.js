@@ -5,7 +5,6 @@ const error = (err, req, res, next) => {
   res
     .status(statusCode)
     .send({
-      // проверяем статус и выставляем сообщение в зависимости от него
       message: statusCode === ERROR_DEFAULT
         ? 'На сервере произошла ошибка'
         : message,

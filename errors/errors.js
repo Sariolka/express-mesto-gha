@@ -3,6 +3,8 @@ const ERROR_NOT_FOUND = 404;
 const ERROR_DEFAULT = 500;
 const OK = 200;
 const UNAUTHORIZED = 401;
+const ERROR_FORBIDDEN = 403;
+const ERROR_CONFLICT = 409;
 
 module.exports = {
   ERROR_VALIDATION,
@@ -10,4 +12,6 @@ module.exports = {
   ERROR_DEFAULT,
   OK,
   UNAUTHORIZED,
+  ERROR_FORBIDDEN,
+  ERROR_CONFLICT,
 };
