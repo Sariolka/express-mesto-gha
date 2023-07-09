@@ -56,7 +56,11 @@ const getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
     .then((user) => {
-      res.status(OK).send(user);
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        next(res.send(user));
+      }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -68,6 +72,7 @@ const getUserById = (req, res, next) => {
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
+    .orFail(new NotFoundError('Нет пользователя с указанным id'))
     .then((user) => {
       res.status(OK).send(user);
     })
