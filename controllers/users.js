@@ -42,7 +42,8 @@ const login = (req, res, next) => {
     })
     .catch(() => {
       next(UnauthorizedError('Необходима авторизация'));
-    });
+    })
+    .catch(next);
 };
 
 const getUsers = (req, res, next) => {
