@@ -1,11 +1,11 @@
 const router = require('express').Router();
-const { errors, celebrate, Joi } = require('celebrate');
+const { celebrate, Joi } = require('celebrate');
 const userRouter = require('./users');
 const cardRouter = require('./cards');
 const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
+const NotFoundError = require('../errors/error-not-found');
 
-router.use(errors());
 router.post(
   '/signin',
   celebrate({
@@ -33,4 +33,7 @@ router.post(
 router.use(auth);
 router.use(userRouter);
 router.use(cardRouter);
+router.use('*', (req, res, next) => {
+  next(new NotFoundError('Такая страница не существует'));
+});
 module.exports = router;

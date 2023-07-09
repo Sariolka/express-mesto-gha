@@ -1,16 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
 const router = require('./routes');
-const { ERROR_NOT_FOUND } = require('./errors/errors');
+const error = require('./middlewares/error');
 
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/mestodb', { family: 4 });
 app.use(express.json());
 app.use(router);
-app.use('/', (reg, res) => {
-  res.status(ERROR_NOT_FOUND).send({ message: 'Что-то пошло не так...' });
-});
+app.use(errors());
+app.use(error);
 app.listen(3000, () => {
   console.log('Сервер запущен!');
 });
