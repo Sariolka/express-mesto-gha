@@ -25,12 +25,12 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(ValidationError('Данные некорректны'));
-      } else if (err.code === 11000) {
-        next(ConflictError('Пользователь с таким e-mail уже существует'));
+        throw new ValidationError('Данные некорректны');
+      } if (err.code === 11000) {
+        throw new ConflictError('Пользователь с таким e-mail уже существует');
       }
-      next(err);
-    });
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
