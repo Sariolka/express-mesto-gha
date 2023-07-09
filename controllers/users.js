@@ -41,7 +41,7 @@ const login = (req, res, next) => {
       res.status(OK).send({ _id: token });
     })
     .catch(() => {
-      next(UnauthorizedError('Необходима авторизация'));
+      throw new UnauthorizedError('Необходима авторизация');
     })
     .catch(next);
 };
