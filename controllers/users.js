@@ -5,7 +5,8 @@ const ValidationError = require('../errors/error-validation');
 const NotFoundError = require('../errors/error-not-found');
 const ConflictError = require('../errors/error-conflict');
 const UnauthorizedError = require('../errors/error-unauthorized');
-const { OK } = require('../errors/errors');
+
+const OK = require('../errors/errors');
 
 const createUser = (req, res, next) => {
   const {
@@ -58,26 +59,19 @@ const getUserById = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
-      } else {
-        next(res.send(user));
       }
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new ValidationError('Пользователь не найден');
-      }
+      res.status(OK).send(user);
     })
     .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(new NotFoundError('Нет пользователя с указанным id'))
     .then((user) => {
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
+      }
       res.status(OK).send(user);
-    })
-    .catch((err) => {
-      res.send(err);
     })
     .catch(next);
 };
