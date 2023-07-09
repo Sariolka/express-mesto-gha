@@ -30,8 +30,8 @@ const createUser = (req, res, next) => {
       } if (err.code === 11000) {
         throw new ConflictError('Пользователь с таким e-mail уже существует');
       }
-    })
-    .catch(next);
+      next(err);
+    });
 };
 
 const login = (req, res, next) => {
