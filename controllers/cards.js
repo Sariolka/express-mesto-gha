@@ -48,11 +48,12 @@ const likeCard = (req, res, next) => {
     .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(ValidationError('Данные некорректны'));
-      } else if (err.message === 'Not Found') {
-        next(NotFoundError('Карточка не найдена!'));
-      } next(err);
-    });
+        throw new ValidationError('Данные некорректны');
+      } if (err.message === 'Not Found') {
+        throw new NotFoundError('Карточка не найдена!');
+      }
+    })
+    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
@@ -65,11 +66,12 @@ const dislikeCard = (req, res, next) => {
     .then((card) => res.status(OK).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(ValidationError('Данные некорректны'));
-      } else if (err.message === 'Not Found') {
-        next(NotFoundError('Карточка не найдена!'));
-      } next(err);
-    });
+        throw new ValidationError('Данные некорректны');
+      } if (err.message === 'Not Found') {
+        throw new NotFoundError('Карточка не найдена!');
+      }
+    })
+    .catch(next);
 };
 
 module.exports = {
