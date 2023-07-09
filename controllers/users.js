@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/error-not-found');
 const ConflictError = require('../errors/error-conflict');
 const UnauthorizedError = require('../errors/error-unauthorized');
 
-const OK = require('../errors/errors');
+const { OK } = require('../errors/errors');
 
 const createUser = (req, res, next) => {
   const {
@@ -26,9 +26,10 @@ const createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Данные некорректны');
+        next(new ValidationError('Данные некорректны'));
       } if (err.code === 11000) {
-        throw new ConflictError('Пользователь с таким e-mail уже существует');
+        next(new ConflictError('Пользователь с таким e-mail уже существует'));
+        return;
       }
       next(err);
     });
