@@ -55,32 +55,26 @@ const getUsers = (req, res, next) => {
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
   User.findById(userId)
-    .orFail(() => new Error('Not Found'))
     .then((user) => {
       res.status(OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(ValidationError('Пользователь не найден'));
-      } else if (err.message === 'Not Found') {
-        next(NotFoundError('Пользователь не найден'));
-      } next(err);
-    });
+        throw new ValidationError('Пользователь не найден');
+      }
+    })
+    .catch(next);
 };
 
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .orFail(() => new Error('Not Found'))
     .then((user) => {
       res.status(OK).send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(ValidationError('Пользователь не найден'));
-      } else if (err.message === 'Not Found') {
-        next(NotFoundError('Пользователь не найден'));
-      } next(err);
-    });
+      res.send(err);
+    })
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {
