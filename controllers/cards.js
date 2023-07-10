@@ -34,7 +34,7 @@ const deleteCard = (req, res, next) => {
         throw new NotFoundError('Карточка не найдена!');
       }
       card.deleteOne()
-        .then(() => res.status(OK).send());
+        .then(() => res.status(OK).send({ message: 'Карточка удалена.' }));
     })
     .catch(next);
 };
