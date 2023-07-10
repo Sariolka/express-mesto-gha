@@ -5,6 +5,7 @@ const cardRouter = require('./cards');
 const { login, createUser } = require('../controllers/users');
 const auth = require('../middlewares/auth');
 const NotFoundError = require('../errors/error-not-found');
+const regex = require('../utils/regex');
 
 router.post(
   '/signup',
@@ -15,7 +16,7 @@ router.post(
       name: Joi.string().min(2).max(30).optional(),
       about: Joi.string().min(2).max(30).optional(),
       avatar: Joi.string().optional()
-        .regex(/(https)?:\/\/(www\.)?[a-z0-9\-._~:/?#[\]@!$&'()*+,;=]{2,}\.[a-z0-9/#?]{2,}$/),
+        .pattern(regex),
     }),
   }),
   createUser,

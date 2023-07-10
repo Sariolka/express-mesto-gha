@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/error-not-found');
 const ConflictError = require('../errors/error-conflict');
 const UnauthorizedError = require('../errors/error-unauthorized');
 
-const { OK } = require('../errors/errors');
+const { OK, CREATED } = require('../errors/errors');
 
 const createUser = (req, res, next) => {
   const {
@@ -17,7 +17,7 @@ const createUser = (req, res, next) => {
       name, about, avatar, email, password: hash,
     }))
     .then((user) => {
-      res.status(OK).send({
+      res.status(CREATED).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,

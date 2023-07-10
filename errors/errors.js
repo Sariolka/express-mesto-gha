@@ -5,6 +5,7 @@ const OK = 200;
 const UNAUTHORIZED = 401;
 const ERROR_FORBIDDEN = 403;
 const ERROR_CONFLICT = 409;
+const CREATED = 201;
 
 module.exports = {
   ERROR_VALIDATION,
@@ -14,4 +15,5 @@ module.exports = {
   UNAUTHORIZED,
   ERROR_FORBIDDEN,
   ERROR_CONFLICT,
+  CREATED,
 };
